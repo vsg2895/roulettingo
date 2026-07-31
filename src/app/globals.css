@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Roulettingo — warm editorial theme: cream paper, crimson accent, navy ink.
+   Fonts: Archivo (sans/body) + Fraunces (serif display). */
+:root {
+  --background: #f7f6f2;
+  --foreground: #1c2430;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Brand palette (generates real utilities: bg-brand, text-ink, border-line…) */
+  --color-cream: #f7f6f2;
+  --color-paper: #ffffff;
+  --color-ink: #1c2430;
+  --color-ink-soft: #3d4450;
+  --color-muted: #6b6659;
+  --color-faint: #9a958a;
+  --color-brand: #b3382f;
+  --color-brand-dark: #a52f27;
+  --color-brand-soft: #c2423a;
+  --color-line: #e8e5dc;
+  --color-line-soft: #ddd8cc;
+  --color-gold: #e8a821;
+  --color-win: #1e7a4f;
+  --color-win-bg: #e9f5ee;
+
+  --font-sans: var(--font-archivo);
+  --font-display: var(--font-fraunces);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-archivo), Arial, Helvetica, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+
+/* Warm radial wash used behind the hero. */
+.hero-wash {
+  background: radial-gradient(900px 420px at 50% -80px, #efe9dd, #f7f6f2 75%);
+}
+
+/* ── Responsive safety net (all phones / tablets / laptops / large screens) ── */
+html {
+  -webkit-text-size-adjust: 100%; /* no iOS text auto-inflation on rotate */
+}
+body {
+  overflow-x: clip; /* never scroll the page sideways; safe with the sticky header */
+}
+
+/* Hide the scrollbar on horizontally-scrollable rows (e.g. the mobile nav). */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Scraped HTML content (casino / offer descriptions) must stay in its column
+   on small screens: wrap long words, cap media width, scroll wide tables. */
+.prose {
+  overflow-wrap: break-word;
+}
+.prose :where(img, video, iframe) {
+  max-width: 100%;
+  height: auto;
+}
+.prose :where(table) {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+.prose :where(pre) {
+  overflow-x: auto;
+}

@@ -1,0 +1,45 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { getCategories } from '@/lib/api'
+import { COPY } from '@/constants/copy'
+
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? ''
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? ''
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: COPY.categories.pageTitle,
+    description: COPY.categories.pageDescription,
+    alternates: { canonical: `${SITE_URL}/categories` },
+    openGraph: { type: 'website', url: `${SITE_URL}/categories`, siteName: SITE_NAME, title: COPY.categories.pageTitle, description: COPY.categories.pageDescription },
+  }
+}
+
+export default async function CategoriesPage() {
+  const res = await getCategories()
+  const categories = res.data
+
+  return (
+    <main className="py-12 px-4">
+      <div className="container mx-auto max-w-5xl">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-ink">{COPY.categories.pageTitle}</h1>
+          <p className="mt-2 text-muted">{COPY.categories.pageDescription}</p>
+        </header>
+        {categories.length === 0 ? (
+          <p className="text-muted">{COPY.categories.noResults}</p>
+        ) : (
+          <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {categories.map((c) => (
+              <li key={c.id}>
+                <Link href={`/categories/${c.slug}`} className="block rounded-2xl border border-line bg-paper p-6 text-center font-semibold text-ink shadow-sm hover:border-brand hover:text-brand transition-colors">
+                  {c.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </main>
+  )
+}
