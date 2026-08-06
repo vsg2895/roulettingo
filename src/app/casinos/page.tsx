@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { getCategories, getCategory } from '@/lib/api'
-import { buildItemListSchema } from '@/lib/seo'
+import { buildItemListSchema, buildWebPageSchema } from '@/lib/seo'
 import { COPY } from '@/constants/copy'
 import CasinoCard from '@/components/CasinoCard'
 import CategoryNav from '@/components/CategoryNav'
@@ -16,18 +16,48 @@ async function resolve(searchParams: Props['searchParams']) {
   const sp = await searchParams
   const page = Math.max(1, Number(sp.page) || 1)
   const categories = (await getCategories()).data
-  const selected = sp.category && categories.some((c) => c.slug === sp.category) ? sp.category : categories[0]?.slug
-  return { categories, selected, page }
+  // `requested` is the category the URL actually asked for; `selected` falls back
+  // to the first category so the page always renders something. The two must stay
+  // distinct: the canonical may only reflect what was requested, or the clean
+  // /casinos URL would declare itself a duplicate of /casinos?category=<first>.
+  const requested =
+    sp.category && categories.some((c) => c.slug === sp.category) ? sp.category : undefined
+  const selected = requested ?? categories[0]?.slug
+  return { categories, requested, selected, page }
+}
+
+/**
+ * The canonical URL for a listing view, carrying only the parameters that
+ * genuinely change the content.
+ */
+function canonicalFor(selected: string | undefined, page: number): string {
+  // Under the Option B consolidation /categories/<slug> is the canonical home of
+  // a category, and /casinos?category=<slug> 301s there (see next.config). What
+  // reaches this page is therefore only the bare /casinos, which renders the
+  // default category — so it points at that category's canonical URL rather
+  // than competing with it as a second copy of the same list.
+  if (!selected) {
+    return `${SITE_URL}/casinos`
+  }
+
+  return `${SITE_URL}/categories/${selected}${page > 1 ? `?page=${page}` : ''}`
 }
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const { selected } = await resolve(searchParams)
-  const title = COPY.casinos.pageTitle
+  const { selected, page } = await resolve(searchParams)
+  // Page 2+ gets its own title so paginated views are not reported as duplicate
+  // titles, and so a searcher landing on one knows where they are.
+  const title = page > 1 ? `${COPY.casinos.pageTitle} — Page ${page}` : COPY.casinos.pageTitle
+  const canonical = canonicalFor(selected, page)
+
   return {
     title,
     description: COPY.casinos.pageDescription,
-    alternates: { canonical: selected ? `${SITE_URL}/casinos?category=${selected}` : `${SITE_URL}/casinos` },
-    openGraph: { type: 'website', url: `${SITE_URL}/casinos`, siteName: SITE_NAME, title, description: COPY.casinos.pageDescription },
+    // Self-referencing canonical. Pointing page 3 back at page 1 (the previous
+    // behaviour) tells Google the deeper pages are duplicates of the first, so
+    // the casinos listed only on those pages never get indexed.
+    alternates: { canonical },
+    openGraph: { type: 'website', url: canonical, siteName: SITE_NAME, title, description: COPY.casinos.pageDescription },
   }
 }
 
@@ -46,7 +76,8 @@ export default async function CasinosPage({ searchParams }: Props) {
   }
 
   const { category, casinos, meta } = (await getCategory(selected, page)).data
-  const basePath = `/casinos?category=${selected}`
+  // Paginate on the canonical route so no internal link goes through the 301.
+  const basePath = `/categories/${selected}`
   const cats = categories as Category[]
 
   const listSchema = buildItemListSchema(
@@ -55,9 +86,18 @@ export default async function CasinosPage({ searchParams }: Props) {
     casinos.map((c, i) => ({ position: (meta.current_page - 1) * meta.per_page + i + 1, name: c.name, url: `${SITE_URL}/casinos/${c.slug}` })),
   )
 
+  const graph = [
+    buildWebPageSchema({
+      name: COPY.casinos.pageTitle,
+      url: canonicalFor(selected, page),
+      description: COPY.casinos.pageDescription,
+    }),
+    listSchema,
+  ]
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(listSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
       <main className="px-4 py-16">
         <div className="container mx-auto max-w-5xl">
           <header className="mb-8">

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getCategories, getCategory, getSpecialOffers } from '@/lib/api'
-import { buildItemListSchema } from '@/lib/seo'
+import { buildItemListSchema, buildWebPageSchema } from '@/lib/seo'
 import { COPY } from '@/constants/copy'
 import CasinoCard from '@/components/CasinoCard'
 import CategoryNav from '@/components/CategoryNav'
@@ -49,6 +49,10 @@ export default async function HomePage({ searchParams }: Props) {
     categoryRes.status === 'fulfilled' && categoryRes.value ? categoryRes.value.data : null
   const casinos: CasinoWithAttachment[] = catData?.casinos ?? []
   const activeCategory = catData?.category ?? null
+  // "See More" is only an affordance when there is actually more: compare the
+  // category's full count against the rows this page received, rather than
+  // hard-coding the page size on both sides where the two could drift apart.
+  const hasMoreCasinos = (catData?.meta?.total ?? 0) > casinos.length
   // Offers are already scoped to the selected category and capped by the backend (?category=&limit=).
   const topOffers: SpecialOffer[] = offersRes.status === 'fulfilled' ? offersRes.value.data : []
 
@@ -60,9 +64,18 @@ export default async function HomePage({ searchParams }: Props) {
     casinos.map((c, i) => ({ position: i + 1, name: c.name, url: `${SITE_URL}/casinos/${c.slug}` })),
   )
 
+  const graph = [
+    buildWebPageSchema({
+      name: `Best Online Casinos ${YEAR}`,
+      url: SITE_URL,
+      description: `Top-rated online casinos for ${YEAR}, reviewed by ${SITE_NAME}.`,
+    }),
+    listSchema,
+  ]
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(listSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
 
       <main>
         {/* Hero */}
@@ -95,7 +108,7 @@ export default async function HomePage({ searchParams }: Props) {
                 <p className="mt-2 text-muted">Browse our highest-rated picks by category.</p>
               </div>
               {selected && (
-                <Link href={`/casinos?category=${selected}`} className="text-sm font-bold text-brand hover:text-brand-dark whitespace-nowrap">{COPY.home.viewAll} →</Link>
+                <Link href={`/categories/${selected}`} className="text-sm font-bold text-brand hover:text-brand-dark whitespace-nowrap">{COPY.home.viewAll} →</Link>
               )}
             </div>
 
@@ -111,10 +124,10 @@ export default async function HomePage({ searchParams }: Props) {
               </ol>
             )}
 
-            {activeCategory && casinos.length > 0 && (
+            {activeCategory && hasMoreCasinos && (
               <div className="mt-9 text-center">
-                <Link href={`/casinos?category=${selected}`} className="inline-flex rounded-full border border-line-soft bg-paper px-7 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand">
-                  See all {activeCategory.name} casinos →
+                <Link href={`/categories/${selected}`} aria-label={`See all ${activeCategory.name} casinos`} className="inline-flex rounded-full border border-line-soft bg-paper px-7 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand">
+                  See More →
                 </Link>
               </div>
             )}
@@ -131,6 +144,12 @@ export default async function HomePage({ searchParams }: Props) {
               </div>
               <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
                 {topOffers.map((offer) => <SpecialOfferCard key={offer.id} offer={offer} />)}
+              </div>
+
+              <div className="mt-9 text-center">
+                <Link href="/special-offers" aria-label="See all special offers" className="inline-flex rounded-full border border-line-soft bg-paper px-7 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand">
+                  See More →
+                </Link>
               </div>
             </div>
           </section>

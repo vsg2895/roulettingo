@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Fraunces, Archivo, Geist_Mono } from 'next/font/google'
 import Link from 'next/link'
 import NewsletterForm from '@/components/NewsletterForm'
@@ -8,7 +8,7 @@ import ToastProvider from '@/components/ToastProvider'
 import CookieSettingsButton from '@/components/CookieSettingsButton'
 import Logo from '@/components/Logo'
 import { getSocialLinks } from '@/lib/api'
-import { buildOrganizationSchema } from '@/lib/seo'
+import { buildOrganizationSchema, buildWebSiteSchema } from '@/lib/seo'
 import { SITE_URL } from '@/lib/config'
 import { COPY } from '@/constants/copy'
 import { LEGAL_PAGES } from '@/constants/legalPages'
@@ -35,10 +35,13 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   keywords: ['online casino reviews', 'casino bonuses', 'special offers', 'best online casinos', SITE_NAME],
   // Explicit per-site favicon so the browser tab always shows this site's mark.
+  // `apple` is deliberately NOT listed: an explicit icons object overrides the
+  // file-based convention, and app/apple-icon.tsx generates a real 180x180 PNG.
+  // Pointing apple at the SVG would both override that and hand iOS a format it
+  // does not support.
   icons: {
     icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
     shortcut: ['/icon.svg'],
-    apple: [{ url: '/icon.svg' }],
   },
   openGraph: {
     type: 'website',
@@ -49,6 +52,38 @@ export const metadata: Metadata = {
   },
   twitter: { card: 'summary_large_image', title: SITE_TITLE, description: SITE_DESCRIPTION },
   robots: { index: true, follow: true },
+  manifest: '/manifest.webmanifest',
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  // Search-engine ownership verification, supplied per environment. Absent env
+  // vars simply produce no tag, so nothing has to be committed to the repo.
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
+    other: {
+      ...(process.env.NEXT_PUBLIC_BING_VERIFICATION
+        ? { 'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION }
+        : {}),
+      ...(process.env.NEXT_PUBLIC_PINTEREST_VERIFICATION
+        ? { 'p:domain_verify': process.env.NEXT_PUBLIC_PINTEREST_VERIFICATION }
+        : {}),
+    },
+  },
+}
+
+/**
+ * Viewport + theme colour.
+ *
+ * Next 14 moved these out of `metadata` into their own export; leaving
+ * themeColor in `metadata` is silently ignored, which is why the sites had no
+ * theme-color at all. `viewport-fit=cover` is deliberately omitted — nothing
+ * here draws into the notch area.
+ */
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#b3382f',
 }
 
 const NAV_LINKS = [
@@ -83,12 +118,16 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     socialLinks = []
   }
 
-  // Site-wide Organization structured data. Rendered once here in the root
-  // layout so every page carries it. Next.js manages the document <head> (manual
-  // <head> tags in a root layout are discouraged), so per the framework's JSON-LD
-  // guide the <script> is rendered in the layout body — crawlers read JSON-LD
-  // from anywhere in the document. The `<` escaping keeps the payload XSS-safe.
-  const organizationSchema = buildOrganizationSchema()
+  // Site-wide structured data, rendered once here so every page carries it.
+  // Next.js manages the document <head> (manual <head> tags in a root layout are
+  // discouraged), so per the framework's JSON-LD guide the <script> is rendered
+  // in the layout body — crawlers read JSON-LD from anywhere in the document.
+  // The `<` escaping keeps the payload XSS-safe.
+  //
+  // Two nodes, cross-referenced by @id: the publisher (Organization) and the
+  // site (WebSite). socialLinks is already fetched above for the footer, so
+  // `sameAs` costs no extra request.
+  const siteGraph = [buildOrganizationSchema(socialLinks), buildWebSiteSchema()]
 
   return (
     <html lang="en" className={`${archivo.variable} ${fraunces.variable} ${geistMono.variable} h-full antialiased`}>
@@ -97,7 +136,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema).replace(/</g, '\\u003c'),
+            __html: JSON.stringify(siteGraph).replace(/</g, '\\u003c'),
           }}
         />
         <header className="sticky top-0 z-40 border-b border-line bg-cream/90 backdrop-blur-xl">
