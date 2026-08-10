@@ -1,3 +1,20 @@
+/**
+ * All user-facing and SEO-facing wording for this site.
+ *
+ * The KEY STRUCTURE is identical across idevaffiliation, winpalack and
+ * roulettingo — same groups, same keys, same order — so the three apps stay
+ * interchangeable and a component written for one works on all of them.
+ *
+ * The WORDS are deliberately unique to this site. That is not decoration: the
+ * three brands are separate domains serving the same catalogue, and if they
+ * shipped the same titles, descriptions and headings, Google would treat them as
+ * duplicate content and suppress all but one. Every string that reaches a
+ * <title>, a meta description, an <h1>/<h2> or a JSON-LD field must therefore
+ * read differently here than on the sibling sites.
+ *
+ * roulettingo's angle: the table-game specialist — roulette variants, live
+ * studios, table limits and how fast a win actually reaches your account.
+ */
 export const COPY = {
   nav: {
     casinos: 'Casinos',
@@ -5,46 +22,56 @@ export const COPY = {
     categories: 'Categories',
   },
   home: {
-    heroEyebrow: 'Trusted Casino Reviews',
+    heroEyebrow: 'Roulette & Table Games',
+    // Split in two so the JSX keeps its emphasised <em> while the words change.
+    heroHeadline: 'Every table, every bonus,',
+    heroHighlight: 'one honest spin',
     heroSubtitle:
-      "Roulettingo rates the internet's casinos the way players actually experience them — payouts, bonuses, and support, verified by hand.",
-    featuredCasinos: 'Top Casinos',
-    specialOffers: 'Special Offers',
-    viewAll: 'View All',
+      "Roulettingo rates the internet's casinos the way table players actually experience them — payouts, bonuses and support, verified by hand.",
+    topCasinosTitle: 'Best Casinos for Table Players',
+    topCasinosSubtitle: 'Ranked on roulette variants, live studios and table limits. Filter by category.',
+    featuredCasinos: 'Find a Table',
+    specialOffers: 'Table Game Offers',
+    viewAll: 'Show All',
+    metaDescription:
+      'Casinos built for table players — roulette variants, live dealer studios, table limits and payout speed, checked by hand.',
   },
   casinos: {
-    pageTitle: 'Online Casino Reviews',
-    pageDescription: 'Honest, in-depth reviews of top online casinos.',
-    visitCasino: 'Visit Casino',
-    readReview: 'Read Review',
-    rating: 'Rating',
-    noResults: 'No casinos found.',
+    pageTitle: 'Roulette Casino Reviews',
+    pageDescription:
+      'Casinos rated on what table players care about: roulette variants, live dealer studios, table limits and how quickly a win lands.',
+    visitCasino: 'Open Casino',
+    readReview: 'Read the Review',
+    rating: 'Table Rating',
+    noResults: 'No casinos match this filter yet.',
   },
   specialOffers: {
-    pageTitle: 'Special Offers',
-    pageDescription: 'Exclusive casino offers and promotions.',
-    claim: 'Claim Offer',
-    noResults: 'No special offers available.',
+    pageTitle: 'Roulette & Table Offers',
+    pageDescription:
+      'Bonuses that actually count on table games, with the wagering contribution stated before you claim them.',
+    claim: 'Grab Offer',
+    noResults: 'No table-game offers are running right now.',
   },
   categories: {
-    pageTitle: 'Categories',
-    pageDescription: 'Browse casinos by category.',
-    noResults: 'No categories found.',
+    pageTitle: 'Game Categories',
+    pageDescription:
+      'Browse casinos by table game, live dealer studio and how fast they pay a win out.',
+    noResults: 'Nothing to show here yet.',
   },
   newsletter: {
-    title: 'Get the latest offers',
-    subtitle: 'Subscribe for exclusive bonuses and casino news.',
-    placeholder: 'Enter your email',
-    button: 'Subscribe',
-    success: 'Thanks! Check your inbox to verify your email and activate your subscription.',
-    error: 'Something went wrong. Please try again.',
+    title: 'New tables, new offers',
+    subtitle: 'A short email when we add a roulette casino or spot an offer that counts on table games.',
+    placeholder: 'Email address',
+    button: 'Join',
+    success: 'Nearly there — check your inbox and confirm your address to finish.',
+    error: 'That did not send. Please try again.',
   },
   footer: {
     disclaimer:
-      'Gambling involves risk. Please play responsibly. 18+ only. This site may earn commissions from casinos we recommend.',
+      'Roulette is a game of chance and the table always holds an edge. Play for entertainment, never to chase a loss, and only if you are 18 or over. We may earn a commission from casinos listed here; it never changes how a table is rated.',
   },
   errors: {
-    notFound: 'Page not found.',
-    apiError: 'Failed to load content. Please try again later.',
+    notFound: 'This page is not on the board.',
+    apiError: 'Could not load this content. Please try again in a moment.',
   },
 } as const

@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? 'Roulettingo'
 
-const SITE_TITLE = `${SITE_NAME} — Expert Online Casino Reviews, Bonuses & Offers`
+const SITE_TITLE = `${SITE_NAME} — Roulette & Live Table Casino Reviews`
 const SITE_DESCRIPTION = `${SITE_NAME} is your independent guide to the best online casinos — expert reviews, exclusive bonuses and hand-picked special offers.`
 
 export const metadata: Metadata = {

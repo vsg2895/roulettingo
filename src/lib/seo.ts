@@ -14,7 +14,7 @@ import { SITE_URL } from './config'
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? ''
 const SITE_DESCRIPTION =
   process.env.NEXT_PUBLIC_SITE_DESCRIPTION ??
-  `${SITE_NAME} is an independent guide to online casinos — expert reviews, bonuses and hand-picked offers.`
+  `${SITE_NAME} covers casinos built for table players — roulette variants, live dealer studios, table limits and payout speed.`
 
 /**
  * Stable @id for the publisher node.

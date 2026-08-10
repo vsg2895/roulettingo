@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { unsubscribe } from '@/lib/api'
 
 // One-click unsubscribe landing. Performs the removal server-side on load
-// (idempotent) and is never indexed.
+
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {

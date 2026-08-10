@@ -68,7 +68,7 @@ export default async function HomePage({ searchParams }: Props) {
     buildWebPageSchema({
       name: `Best Online Casinos ${YEAR}`,
       url: SITE_URL,
-      description: `Top-rated online casinos for ${YEAR}, reviewed by ${SITE_NAME}.`,
+      description: COPY.home.metaDescription,
     }),
     listSchema,
   ]
@@ -104,8 +104,8 @@ export default async function HomePage({ searchParams }: Props) {
           <div className="container mx-auto max-w-6xl">
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 id="top-casinos-heading" className="font-display text-3xl font-semibold text-ink sm:text-4xl">Top Online Casinos</h2>
-                <p className="mt-2 text-muted">Browse our highest-rated picks by category.</p>
+                <h2 id="top-casinos-heading" className="font-display text-3xl font-semibold text-ink sm:text-4xl">{COPY.home.topCasinosTitle}</h2>
+                <p className="mt-2 text-muted">{COPY.home.topCasinosSubtitle}</p>
               </div>
               {selected && (
                 <Link href={`/categories/${selected}`} className="text-sm font-bold text-brand hover:text-brand-dark whitespace-nowrap">{COPY.home.viewAll} →</Link>

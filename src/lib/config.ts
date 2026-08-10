@@ -18,9 +18,12 @@ const SITE_DOMAINS: Record<string, string> = {
   winpalack: 'https://winpalack.com',
   roulettingo: 'https://roulettingo.com',
 }
+// Ports each site's dev server actually runs on. Kept in step with the
+// revalidation URLs registered against each site in the admin — if these drift,
+// a dev-mode canonical points at a DIFFERENT site's server.
 const SITE_DEV_PORTS: Record<string, string> = {
-  idevaffiliation: '3000',
-  winpalack: '3001',
+  idevaffiliation: '3001',
+  winpalack: '3002',
   roulettingo: '3003',
 }
 
