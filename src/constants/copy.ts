@@ -33,6 +33,8 @@ export const COPY = {
     featuredCasinos: 'Find a Table',
     specialOffers: 'Table Game Offers',
     viewAll: 'Show All',
+    // Leads the home <title>; the year and brand are appended in page.tsx.
+    homeTitle: 'Best Roulette & Table Casinos',
     metaDescription:
       'Casinos built for table players — roulette variants, live dealer studios, table limits and payout speed, checked by hand.',
   },
@@ -67,6 +69,9 @@ export const COPY = {
     error: 'That did not send. Please try again.',
   },
   footer: {
+    // Short brand blurb in the footer, above the legal links.
+    tagline:
+      'A curated, independent guide to the finest online casinos and exclusive offers. Play responsibly — 18+.',
     disclaimer:
       'Roulette is a game of chance and the table always holds an edge. Play for entertainment, never to chase a loss, and only if you are 18 or over. We may earn a commission from casinos listed here; it never changes how a table is rated.',
   },

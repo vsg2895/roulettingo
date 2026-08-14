@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getCategories, getCategory, getSpecialOffers } from '@/lib/api'
-import { buildItemListSchema, buildWebPageSchema } from '@/lib/seo'
+import { buildItemListSchema, buildWebPageSchema, jsonLdScript } from '@/lib/seo'
 import { COPY } from '@/constants/copy'
 import CasinoCard from '@/components/CasinoCard'
 import CategoryNav from '@/components/CategoryNav'
@@ -26,8 +26,8 @@ async function resolveCategory(searchParams: Props['searchParams']) {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = `Best Online Casinos ${YEAR} | ${SITE_NAME}`
-  const description = `Discover the top-rated online casinos for ${YEAR}, reviewed by ${SITE_NAME} for bonuses, safety and game selection.`
+  const title = `${COPY.home.homeTitle} ${YEAR} | ${SITE_NAME}`
+  const description = COPY.home.metaDescription
   return {
     title,
     description,
@@ -75,7 +75,7 @@ export default async function HomePage({ searchParams }: Props) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
 
       <main>
         {/* Hero */}
