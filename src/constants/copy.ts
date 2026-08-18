@@ -35,6 +35,7 @@ export const COPY = {
     viewAll: 'Show All',
     // Leads the home <title>; the year and brand are appended in page.tsx.
     homeTitle: 'Best Roulette & Table Casinos',
+    faqTitle: 'Questions players actually ask',
     metaDescription:
       'Casinos built for table players — roulette variants, live dealer studios, table limits and payout speed, checked by hand.',
   },
@@ -42,6 +43,14 @@ export const COPY = {
     pageTitle: 'Roulette Casino Reviews',
     pageDescription:
       'Casinos rated on what table players care about: roulette variants, live dealer studios, table limits and how quickly a win lands.',
+    // Meta-description fallback for a casino review page. Casino records are
+    // GLOBAL master data shared by every site, so without a per-site line here
+    // all four domains would ship the identical description for the same casino.
+    // Short per-site tail appended to an ADMIN-ENTERED casino meta description.
+    // Casino records are shared by every site, so without this the same
+    // description would ship on all four domains the moment the field is filled.
+    reviewSignature: 'Rated for roulette and table play.',
+    reviewSummary: 'rated on roulette variants, live dealer studios, table limits and payout speed.',
     visitCasino: 'Open Casino',
     readReview: 'Read the Review',
     rating: 'Table Rating',
@@ -51,6 +60,9 @@ export const COPY = {
     pageTitle: 'Roulette & Table Offers',
     pageDescription:
       'Bonuses that actually count on table games, with the wagering contribution stated before you claim them.',
+    // Appended to an offer's (shared) bonus text so the four sites do not ship
+    // an identical meta description for the same offer.
+    offerMetaSuffix: 'Checked for how it actually counts on table games before you claim it.',
     claim: 'Grab Offer',
     noResults: 'No table-game offers are running right now.',
   },
@@ -58,6 +70,9 @@ export const COPY = {
     pageTitle: 'Game Categories',
     pageDescription:
       'Browse casinos by table game, live dealer studio and how fast they pay a win out.',
+    // Meta-description tail for a single category page. Category records are
+    // shared master data, so this is what keeps the four sites distinct there.
+    categoryMetaSuffix: 'ranked on table variants, live dealer studios and how fast a win reaches your account.',
     noResults: 'Nothing to show here yet.',
   },
   newsletter: {
