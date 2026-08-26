@@ -87,6 +87,11 @@ export const COPY = {
     // Short brand blurb in the footer, above the legal links.
     tagline:
       'A curated, independent guide to the finest online casinos and exclusive offers. Play responsibly — 18+.',
+    // Registered postal address, shown beside the copyright line. A physical
+    // address in the footer is what mailbox providers and the gambling
+    // affiliate compliance checks both look for, and it must match the address
+    // used in the email templates.
+    postalAddress: '15 Evagorou Avenue, Nicosia 1066, Cyprus',
     disclaimer:
       'Roulette is a game of chance and the table always holds an edge. Play for entertainment, never to chase a loss, and only if you are 18 or over. We may earn a commission from casinos listed here; it never changes how a table is rated.',
   },
