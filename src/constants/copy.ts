@@ -16,6 +16,24 @@
  * studios, table limits and how fast a win actually reaches your account.
  */
 export const COPY = {
+  // SEO identity. These three reach the <title>, the meta description and the
+  // keywords tag on EVERY page that does not set its own — which is most of
+  // them — so they are the strings most likely to be read as duplicate content
+  // if a sibling domain ships the same words. Kept here, beside the rest of this
+  // site's wording, rather than inline in layout.tsx where they drifted into
+  // being byte-identical with idevaffiliation.
+  site: {
+    titleTail: 'Roulette & Live Table Casino Reviews',
+    description:
+      'reviews casinos on what matters at the table: roulette variants, live dealer studios, table limits and how quickly a win actually clears.',
+    keywords: [
+      'online roulette casinos',
+      'live dealer roulette',
+      'roulette table limits',
+      'european vs american roulette',
+      'live casino reviews',
+    ],
+  },
   nav: {
     casinos: 'Casinos',
     specialOffers: 'Special Offers',
