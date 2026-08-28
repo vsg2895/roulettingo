@@ -103,13 +103,21 @@ export const COPY = {
   },
   footer: {
     // Short brand blurb in the footer, above the legal links.
+    //
+    // KEEP THIS UNDER ~72 CHARACTERS. The footer's brand column is
+    // (1152 - 32 padding - 40 gap) / 2 = 540px at the sm: breakpoint where the
+    // grid becomes two columns, and the text renders at 14px — about 77
+    // characters to a line. Anything longer wraps to a second line, which is
+    // what this wording was trimmed to fix. It still wraps on a phone, where a
+    // single column is ~340px; that is unavoidable for any real sentence and is
+    // the correct behaviour there.
     tagline:
-      'A curated, independent guide to the finest online casinos and exclusive offers. Play responsibly — 18+.',
+      'Independent roulette and live table reviews. Play responsibly — 18+.',
     // Registered postal address, shown beside the copyright line. A physical
     // address in the footer is what mailbox providers and the gambling
     // affiliate compliance checks both look for, and it must match the address
     // used in the email templates.
-    postalAddress: '15 Evagorou Avenue, Nicosia 1066, Cyprus',
+    postalAddress: '40 George Square, Edinburgh EH8 9LH, United Kingdom',
     disclaimer:
       'Roulette is a game of chance and the table always holds an edge. Play for entertainment, never to chase a loss, and only if you are 18 or over. We may earn a commission from casinos listed here; it never changes how a table is rated.',
   },
