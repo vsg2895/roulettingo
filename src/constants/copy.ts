@@ -53,12 +53,12 @@ export const COPY = {
     viewAll: 'Show All',
     // Leads the home <title>; the year and brand are appended in page.tsx.
     homeTitle: 'Best Roulette & Table Casinos',
-    faqTitle: 'Questions players actually ask',
+    faqTitle: 'Roulette questions, answered',
     metaDescription:
       'Casinos built for table players — roulette variants, live dealer studios, table limits and payout speed, checked by hand.',
   },
   casinos: {
-    pageTitle: 'Roulette Casino Reviews',
+    pageTitle: 'Rated for Roulette & Table Play',
     pageDescription:
       'Casinos rated on what table players care about: roulette variants, live dealer studios, table limits and how quickly a win lands.',
     // Meta-description fallback for a casino review page. Casino records are
@@ -67,12 +67,20 @@ export const COPY = {
     // Short per-site tail appended to an ADMIN-ENTERED casino meta description.
     // Casino records are shared by every site, so without this the same
     // description would ship on all four domains the moment the field is filled.
+    // Appended to og:title / twitter:title on a casino review. The casino's
+    // own meta_title is shared master data, so without this every domain
+    // shipped an IDENTICAL share-card title for the same casino.
+    // H2 over the offers block on a casino page. The literal 'Special Offers'
+    // was hardcoded in the component on all six sites — an identical H2 on
+    // every review page in the network.
+    offersHeading: 'Table Offers',
+    reviewTitleTail: 'Rated for Table Play',
     reviewSignature: 'Rated for roulette and table play.',
     reviewSummary: 'rated on roulette variants, live dealer studios, table limits and payout speed.',
     visitCasino: 'Open Casino',
     readReview: 'Read the Review',
     rating: 'Table Rating',
-    noResults: 'No casinos match this filter yet.',
+    noResults: 'No tables match those filters yet. Try another variant or limit.',
   },
   specialOffers: {
     pageTitle: 'Roulette & Table Offers',
