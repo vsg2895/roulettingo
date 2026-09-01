@@ -48,7 +48,7 @@ export const COPY = {
       "Roulettingo rates the internet's casinos the way table players actually experience them — payouts, bonuses and support, verified by hand.",
     topCasinosTitle: 'Best Casinos for Table Players',
     topCasinosSubtitle: 'Ranked on roulette variants, live studios and table limits. Filter by category.',
-    featuredCasinos: 'Find a Table',
+    featuredCasinos: 'Find A Table',
     specialOffers: 'Table Game Offers',
     viewAll: 'Show All',
     // Leads the home <title>; the year and brand are appended in page.tsx.
@@ -74,11 +74,13 @@ export const COPY = {
     // was hardcoded in the component on all six sites — an identical H2 on
     // every review page in the network.
     offersHeading: 'Table Offers',
+    // Tail of the summary-panel H2: `{casino.name} table facts`.
+    glanceHeadingTail: 'table facts',
     reviewTitleTail: 'Rated for Table Play',
     reviewSignature: 'Rated for roulette and table play.',
     reviewSummary: 'rated on roulette variants, live dealer studios, table limits and payout speed.',
     visitCasino: 'Open Casino',
-    readReview: 'Read the Review',
+    readReview: 'Read The Review',
     rating: 'Table Rating',
     noResults: 'No tables match those filters yet. Try another variant or limit.',
   },

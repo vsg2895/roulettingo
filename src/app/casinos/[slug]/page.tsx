@@ -13,6 +13,7 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? ''
 
 type Props = { params: Promise<{ slug: string }> }
 
+
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const res = await getCasinos()
   return res.data.map((c) => ({ slug: c.slug }))
@@ -65,6 +66,9 @@ export default async function CasinoDetailPage({ params }: Props) {
   const banner = resolveImageUrl(casino.banner_image)
   const logo = resolveImageUrl(casino.image_path)
   const pageUrl = `${SITE_URL}/casinos/${slug}`
+  // Facts for the summary panel below the CTA.
+  const categoryNames = (casino.categories ?? []).map((c) => c.name)
+  const liveOffers = (casino.special_offers ?? []).length
   const reviewSchema = buildCasinoReviewSchema(casino)
   const breadcrumb = buildBreadcrumbSchema(
     [
@@ -125,6 +129,37 @@ export default async function CasinoDetailPage({ params }: Props) {
           <a href={casino.attachment.affiliate_url} target="_blank" rel="nofollow sponsored noopener" className="mt-6 inline-block rounded-xl bg-gradient-to-b from-brand-soft to-brand-dark px-10 py-4 font-bold text-white shadow-md shadow-brand/25 transition-transform hover:-translate-y-0.5">
             {COPY.casinos.visitCasino}
           </a>
+
+
+          {/* Summary panel — the same at-a-glance facts the sibling sites show,
+              so a reader gets rating, offer count, categories and revision date
+              without scrolling the review. Every row is conditional: a casino
+              with no offers or no categories simply renders fewer rows. */}
+          <section className="mt-8 rounded-2xl border border-line bg-paper p-6" aria-labelledby="at-a-glance">
+            <h2 id="at-a-glance" className="font-display text-xl font-semibold text-ink">
+              {casino.name} {COPY.casinos.glanceHeadingTail}
+            </h2>
+            <dl className="mt-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-3">
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-faint">{COPY.casinos.rating}</dt>
+                <dd className="mt-1 text-ink">{casino.rating} out of 5</dd>
+              </div>
+              {liveOffers > 0 && (
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-faint">Offers listed</dt>
+                  <dd className="mt-1 text-ink">
+                    {liveOffers} {liveOffers === 1 ? 'offer' : 'offers'} on this page
+                  </dd>
+                </div>
+              )}
+              {categoryNames.length > 0 && (
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-faint">Listed under</dt>
+                  <dd className="mt-1 text-ink">{categoryNames.join(', ')}</dd>
+                </div>
+              )}
+            </dl>
+          </section>
 
           {casino.description && (
             <div className="prose prose-zinc mt-8 max-w-none" dangerouslySetInnerHTML={{ __html: casino.description }} />
