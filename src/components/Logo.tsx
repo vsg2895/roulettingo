@@ -33,7 +33,7 @@ export default function Logo({ className = '' }: { className?: string }) {
         <span className="font-sans text-[22px] font-bold tracking-tight text-ink">
           Roulett<span className="text-brand">ingo</span>
         </span>
-        <span className="mt-[3px] text-[10px] font-medium tracking-[0.25em] text-faint">SPIN SMARTER</span>
+        <span className="mt-[3px] text-[11px] font-medium tracking-[0.18em] text-faint">SPIN SMARTER</span>
       </span>
     </Link>
   )
