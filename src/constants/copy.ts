@@ -108,7 +108,24 @@ export const COPY = {
     subtitle: 'A short email when we add a roulette casino or spot an offer that counts on table games.',
     placeholder: 'Email address',
     button: 'Join',
-    success: 'Nearly there — check your inbox and confirm your address to finish.',
+    // Shown while the address is being checked. The subscribe request now
+    // waits on a live address-validation call, so the button has to say so
+    // rather than just dimming for a second or two.
+    checking: 'Checking…',
+        // The spam line is NOT optional wording. This is a double opt-in list: an
+    // unconfirmed subscriber never receives anything again, and the verify mail
+    // is the single most likely message to be filtered — new sender, one link,
+    // no history. Telling people where to look is the difference between a
+    // signup and a dead row.
+    success:
+      'Nearly there — check your inbox and confirm your address to finish. '
+      + 'If nothing arrives, it may be sitting in spam or junk.',
+    // Shown when the API reports email_sent=false — the site is still
+    // collecting addresses but its sending is switched off in the admin.
+    // Promising an inbox (and a spam folder to search) for mail that will
+    // never arrive is worse than not collecting the address at all.
+    successNoEmail:
+      "You're on the list. We are not sending confirmation emails from this site at the moment.",
     error: 'That did not send. Please try again.',
   },
   footer: {
