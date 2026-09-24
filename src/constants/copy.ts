@@ -146,7 +146,7 @@ export const COPY = {
     // used in the email templates.
     postalAddress: '40 George Square, Edinburgh EH8 9LH, United Kingdom',
     disclaimer:
-      'Roulette is a game of chance and the table always holds an edge. Play for entertainment, never to chase a loss, and only if you are 18 or over. We may earn a commission from casinos listed here; it never changes how a table is rated.',
+      'Roulette is a game of chance and the table always holds an edge. Play for entertainment, never to chase a loss, and only if you are 18 or over.',
   },
   errors: {
     notFound: 'This page is not on the board.',
