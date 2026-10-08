@@ -46,19 +46,19 @@ export const COPY = {
     heroHighlight: 'one honest spin',
     heroSubtitle:
       "Roulettingo rates the internet's casinos the way table players actually experience them — payouts, bonuses and support, verified by hand.",
-    topCasinosTitle: 'Best Casinos for Table Players',
+    topCasinosTitle: 'Best Casinos For Table Players',
     topCasinosSubtitle: 'Ranked on roulette variants, live studios and table limits. Filter by category.',
     featuredCasinos: 'Find A Table',
     specialOffers: 'Table Game Offers',
     viewAll: 'Show All',
     // Leads the home <title>; the year and brand are appended in page.tsx.
     homeTitle: 'Best Roulette & Table Casinos',
-    faqTitle: 'Roulette questions, answered',
+    faqTitle: 'Roulette Questions, Answered',
     metaDescription:
       'Casinos built for table players — roulette variants, live dealer studios, table limits and payout speed, checked by hand.',
   },
   casinos: {
-    pageTitle: 'Rated for Roulette & Table Play',
+    pageTitle: 'Rated For Roulette & Table Play',
     pageDescription:
       'Casinos rated on what table players care about: roulette variants, live dealer studios, table limits and how quickly a win lands.',
     // Meta-description fallback for a casino review page. Casino records are
@@ -76,7 +76,7 @@ export const COPY = {
     offersHeading: 'Table Offers',
     // Tail of the summary-panel H2: `{casino.name} table facts`.
     glanceHeadingTail: 'table facts',
-    reviewTitleTail: 'Rated for Table Play',
+    reviewTitleTail: 'Rated For Table Play',
     reviewSignature: 'Rated for roulette and table play.',
     reviewSummary: 'rated on roulette variants, live dealer studios, table limits and payout speed.',
     visitCasino: 'Open Casino',
@@ -104,7 +104,7 @@ export const COPY = {
     noResults: 'Nothing to show here yet.',
   },
   newsletter: {
-    title: 'New tables, new offers',
+    title: 'New Tables, New Offers',
     subtitle: 'A short email when we add a roulette casino or spot an offer that counts on table games.',
     placeholder: 'Email address',
     button: 'Join',
