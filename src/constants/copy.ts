@@ -43,6 +43,10 @@ export const COPY = {
     categories: 'Categories',
   },
   home: {
+    // The chip row at the top of the page. No visible heading — the chips say
+    // what they are — so this exists for screen readers, which otherwise meet
+    // an unnamed navigation landmark between the hero and the casino list.
+    bonusTypesLabel: 'Bonus types',
     heroEyebrow: 'Roulette & Table Games',
     // Split in two so the JSX keeps its emphasised <em> while the words change.
     heroHeadline: 'Every table, every bonus,',
@@ -87,6 +91,19 @@ export const COPY = {
     rating: 'Table Rating',
     noResults: 'No tables match those filters yet. Try another variant or limit.',
   },
+  /**
+   * The page behind one bonus type (/bonuses/[slug]).
+   *
+   * `metaSuffix` is appended to the type's name when the admin wrote no
+   * description, so the meta line is still specific to the page rather than
+   * boilerplate shared by eight of them.
+   */
+  bonusCategory: {
+    metaSuffix: 'every bonus of this kind currently listed here, with the terms that apply.',
+    countOne: 'bonus',
+    countMany: 'bonuses',
+  },
+
   specialOffers: {
     pageTitle: 'Roulette & Table Offers',
     pageDescription:

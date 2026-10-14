@@ -28,15 +28,43 @@
   --color-win: #1e7a4f;
   --color-win-bg: #e9f5ee;
 
-  --font-sans: var(--font-archivo);
+  /* `Ampersand` first in both sans stacks — see the @font-face below. It
+     carries exactly one character, so Archivo still draws everything else. */
+  --font-sans: 'Ampersand', var(--font-archivo);
   --font-display: var(--font-fraunces);
   --font-mono: var(--font-geist-mono);
+}
+
+/* ── The ampersand ──────────────────────────────────────────────────────────
+   Archivo draws "&" as an Et-ligature — a shape most readers do not recognise
+   as an ampersand at all, which is how "50 FS For Registration & 400%" ends up
+   looking like a typo on a casino card.
+
+   The text itself is right: a plain U+0026, encoded `&amp;` in the HTML. This
+   is a glyph choice, and Archivo offers no way to change it — the file Google
+   serves has a single `ampersand` glyph and no `salt` / `ss01` feature to
+   substitute it.
+
+   So that ONE character comes from a serif the reader already has installed.
+   `unicode-range` is what makes this safe: the face is only ever consulted for
+   U+0026, so no other glyph can land on it, and a device with none of these
+   fonts simply falls through to Archivo — the status quo, never a blank. The
+   five cover macOS/iOS, Windows, Android and the two usual Linux sets.
+
+   A serif ampersand in a sans line is the long-standing typographic answer to
+   this, and it suits the brand here: the display face is already Fraunces,
+   with Georgia as its own fallback. */
+@font-face {
+  font-family: 'Ampersand';
+  src: local('Georgia'), local('Times New Roman'), local('Noto Serif'),
+    local('DejaVu Serif'), local('Liberation Serif');
+  unicode-range: U+0026;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-archivo), Arial, Helvetica, sans-serif;
+  font-family: 'Ampersand', var(--font-archivo), Arial, Helvetica, sans-serif;
 }
 
 .font-display {
