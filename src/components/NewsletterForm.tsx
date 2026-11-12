@@ -60,14 +60,19 @@ export default function NewsletterForm() {
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-      <div>
-        <p className="font-display text-base font-semibold text-ink sm:text-lg">{COPY.newsletter.title}</p>
-        <p className="mt-0.5 text-sm text-muted">{COPY.newsletter.subtitle}</p>
+    <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex min-w-0 flex-[1_1_340px] items-center gap-3">
+        <span aria-hidden className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-[10px] bg-brand">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+        </span>
+        <div className="min-w-0">
+          <p className="text-[15px] font-bold text-[#f1f0ec]">{COPY.newsletter.title}</p>
+          <p className="text-[13px] text-[#b9bdc4]">{COPY.newsletter.subtitle}</p>
+        </div>
       </div>
 
-      <div className="w-full sm:w-auto">
-        <form onSubmit={onSubmit} className="relative flex gap-2.5">
+      <div className="w-full min-w-0 sm:w-auto sm:flex-[0_1_380px]">
+        <form onSubmit={onSubmit} className="relative flex gap-2">
 
           {/* HONEYPOT. Never shown, never focusable, never autofilled — a human
               cannot reach it, a naive bot fills every field it finds. The server
@@ -112,12 +117,14 @@ export default function NewsletterForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={COPY.newsletter.placeholder}
-            className="w-full rounded-xl border min-h-11 border-line-soft bg-paper px-4 py-2.5 text-base text-ink placeholder:text-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 sm:w-72"
+            aria-label="Email address"
+            autoComplete="email"
+            className="h-11 w-full min-w-0 flex-1 rounded-full border border-[#3a4352] bg-[#252e3c] px-[18px] text-sm text-white placeholder:text-[#9aa0a9] focus:border-gold focus:outline-none"
           />
           <button
             type="submit"
             disabled={loading}
-            className="min-h-11 shrink-0 rounded-xl bg-gradient-to-b from-brand-soft to-brand-dark px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-brand/25 transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+            className="min-h-11 shrink-0 rounded-full bg-brand px-[22px] text-sm font-bold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
           >
             {loading ? COPY.newsletter.checking : COPY.newsletter.button}
           </button>
@@ -127,7 +134,7 @@ export default function NewsletterForm() {
             is a DIFFERENT cache key upstream, so it gets its own validation
             call rather than reusing the typo's verdict. */}
         {suggestedEmail && (
-          <p className="mt-2 text-sm">
+          <p className="mt-2 text-sm text-[#f1f0ec]">
             Did you mean{' '}
             <button
               type="button"

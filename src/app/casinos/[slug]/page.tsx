@@ -7,10 +7,14 @@ import { buildCasinoReviewSchema, buildBreadcrumbSchema, buildWebPageSchema, bre
 import { resolveImageUrl } from '@/lib/images'
 import CasinoSpecialOffers from '@/components/CasinoSpecialOffers'
 import CasinoReviews from '@/components/CasinoReviews'
+import CasinoCard, { Stars } from '@/components/CasinoCard'
 import { COPY } from '@/constants/copy'
 import { SITE_URL } from '@/lib/config'
 
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? ''
+
+/** `sizes` for the page-wide banner: the 1200px container less its 16px gutters. */
+const BANNER_SIZES = '(min-width: 1232px) 1168px, calc(100vw - 2rem)'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -166,108 +170,131 @@ export default async function CasinoDetailPage({ params }: Props) {
     reviewSchema,
   ]
 
+  // "More casinos for table players": the next three of this site's list.
+  // The same cached, `casinos`-tagged fetch the listing uses; a failure only
+  // drops the section.
+  const moreCasinos = await getCasinos()
+    .then(({ data }) => data.filter((c) => c.id !== casino.id).slice(0, 3))
+    .catch(() => [])
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
 
-      <main className="py-12 px-4 sm:px-6 lg:px-8">
-        {/* Same 90rem measure and two-column shape as every listing: the review,
-            offers and player reviews run in the main column, the summary sits in
-            a sticky rail beside them. */}
-        <div className="mx-auto max-w-[90rem]">
-          <nav className="mb-6 text-sm text-faint">
-            <Link href="/" className="inline-block -mx-1 px-1 py-3 -my-3 hover:text-brand">Home</Link> / <Link href="/casinos" className="inline-block -mx-1 px-1 py-3 -my-3 hover:text-brand">Casinos</Link> / <span className="text-ink-soft">{casino.name}</span>
-          </nav>
+      <main className="mx-auto max-w-[1200px] px-4">
+        <nav aria-label="Breadcrumb" className="flex flex-wrap gap-1.5 pt-[22px] text-[13px] text-mute">
+          <Link href="/" className="-my-3 inline-block py-3 hover:text-brand">Home</Link>/<Link href="/casinos" className="-my-3 inline-block py-3 hover:text-brand">Casinos</Link>/<span className="font-semibold text-ink">{casino.name}</span>
+        </nav>
 
-          {banner && (
-            <div className="relative mb-6 aspect-[16/5] overflow-hidden rounded-2xl bg-cream">
-              <Image src={banner} alt={`${casino.name} banner`} fill className="object-contain" sizes="(max-width: 1024px) 100vw, 1440px" priority />
-            </div>
+        {/* The banner, laid out as on winpalack: the artwork whole (object-contain)
+            in a 16:5 frame straight under the breadcrumb, and nothing at all for
+            a casino without artwork. `preload` + `fetchPriority`, not `priority`: in
+            Next 16 `priority` emits the preload at the browser's default Low
+            priority, and this image is the mobile LCP. */}
+        {banner && (
+          <div className="relative mt-4 aspect-[16/5] overflow-hidden rounded-2xl bg-sand">
+            <Image src={banner} alt={`${casino.name} banner`} fill className="object-contain object-center" sizes={BANNER_SIZES} preload fetchPriority="high" />
+          </div>
+        )}
+
+        {/* Name, rating, the offer and the CTA — the things a visitor came for. */}
+        <header className="mt-5 flex flex-wrap items-center gap-[18px] rounded-[22px] border border-line bg-paper px-5 py-[18px] shadow-[0_18px_40px_rgba(28,36,48,0.08)]">
+          {logo ? (
+            <Image src={logo} alt={`${casino.name} logo`} width={192} height={144} sizes="96px" className="h-[72px] w-24 shrink-0 rounded-[14px] border border-[#ece8df] bg-white object-contain p-1.5" />
+          ) : (
+            <span className="grid h-[72px] w-24 shrink-0 place-items-center rounded-[14px] border border-[#ece8df] bg-white p-2 text-center font-display font-semibold">{casino.name}</span>
           )}
-
-          {/* Name and rating on the left, the bonus line and the CTA on the right:
-              the two things a visitor came for, without scrolling. */}
-          <header className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-center gap-4">
-              {logo && <Image src={logo} alt={`${casino.name} logo`} width={80} height={80} sizes="(min-width: 1024px) 80px, 64px" className="h-16 w-16 shrink-0 rounded object-contain lg:h-20 lg:w-20" />}
-              <div>
-                <h1 className="font-display text-4xl font-semibold text-ink">{casino.name}</h1>
-                <p className="mt-1 text-gold" aria-label={`${casino.rating} out of 5`}>{'★'.repeat(casino.rating)}<span className="text-line-soft">{'★'.repeat(5 - casino.rating)}</span></p>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center lg:justify-end">
-              {casino.bonuses && (
-                <p className="rounded-xl bg-win-bg px-5 py-4 text-lg font-bold text-win">{casino.bonuses}</p>
-              )}
-
-              <a href={casino.attachment.affiliate_url} target="_blank" rel="nofollow sponsored noopener" className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-b from-brand-soft to-brand-dark px-10 py-4 font-bold text-white shadow-md shadow-brand/25 transition-transform hover:-translate-y-0.5">
-                {COPY.casinos.visitCasino}
-              </a>
-            </div>
-          </header>
-
-          <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_26rem]">
-            {/* The rail. First in source so the at-a-glance facts still read
-                before the long description on phones, where the columns stack;
-                on desktop `lg:order-2` moves it right and `sticky` keeps it in
-                view while the review scrolls. */}
-            <aside className="lg:order-2 lg:sticky lg:top-24 lg:self-start">
-              {/* Summary panel — the same at-a-glance facts the sibling sites show,
-                  so a reader gets rating, offer count, categories and revision date
-                  without scrolling the review. Every row is conditional: a casino
-                  with no offers or no categories simply renders fewer rows. */}
-              <section className="rounded-2xl border border-line bg-paper p-6" aria-labelledby="at-a-glance">
-                <h2 id="at-a-glance" className="font-display text-xl font-semibold text-ink">
-                  {casino.name} {COPY.casinos.glanceHeadingTail}
-                </h2>
-                <dl className="mt-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-1">
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-faint">{COPY.casinos.rating}</dt>
-                    <dd className="mt-1 text-ink">{casino.rating} out of 5</dd>
-                  </div>
-                  {liveOffers > 0 && (
-                    <div>
-                      <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-faint">Offers listed</dt>
-                      <dd className="mt-1 text-ink">
-                        {liveOffers} {liveOffers === 1 ? 'offer' : 'offers'} on this page
-                      </dd>
-                    </div>
-                  )}
-                  {categoryNames.length > 0 && (
-                    <div>
-                      <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-faint">Listed under</dt>
-                      <dd className="mt-1 text-ink">{categoryNames.join(', ')}</dd>
-                    </div>
-                  )}
-                </dl>
-              </section>
-            </aside>
-
-            {/* Every block below carries its own top margin; the first one
-                loses it so the column starts level with the rail. */}
-            <div className="min-w-0 lg:order-1 [&>*:first-child]:mt-0">
-              {casino.description && (
-                <div className="prose prose-zinc mt-8 max-w-none" dangerouslySetInnerHTML={{ __html: casino.description }} />
-              )}
-
-              {casino.categories && casino.categories.length > 0 && (
-                <div className="mt-8 flex flex-wrap gap-2">
-                  {casino.categories.map((c) => (
-                    <Link key={c.id} href={`/categories/${c.slug}`} className="inline-flex min-h-11 items-center rounded-full bg-cream px-4 py-1.5 text-sm text-ink-soft transition-colors hover:bg-brand/10 hover:text-brand">{c.name}</Link>
-                  ))}
-                </div>
-              )}
-
-              <CasinoSpecialOffers offers={casino.special_offers ?? []} />
-
-              {/* Renders nothing at all until this site's "Visitor reviews"
-                  switch is on in the admin — the component gates itself on the
-                  endpoint's 404, so no per-site conditional is needed here. */}
-              <CasinoReviews casinoSlug={casino.slug} casinoName={casino.name} />
+          <div className="min-w-0 flex-[1_1_220px]">
+            <h1 className="font-display text-[28px] font-semibold text-ink sm:text-[38px]">{casino.name}</h1>
+            <div className="mt-1 flex items-center gap-2 text-sm font-semibold text-ink-2">
+              <Stars rating={casino.rating} />
+              {casino.rating.toFixed(1)} · {COPY.casinos.rating}
             </div>
           </div>
+          {casino.bonuses && <p className="rounded-[14px] bg-win-bg px-4 py-3 font-bold text-win">{casino.bonuses}</p>}
+          <a href={casino.attachment.affiliate_url} target="_blank" rel="nofollow sponsored noopener" className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full bg-brand px-6 font-bold text-white transition-colors hover:bg-brand-dark">
+            {COPY.casinos.visitCasino}
+          </a>
+        </header>
+
+        <section className="mt-11" aria-labelledby="at-a-glance">
+          <h2 id="at-a-glance" className="font-display text-[30px] font-semibold text-ink">
+            {casino.name} {COPY.casinos.glanceHeadingTail}
+          </h2>
+          <dl className="mt-[22px] grid grid-cols-[repeat(auto-fit,minmax(min(220px,100%),1fr))] gap-3.5">
+            <div className="rounded-[18px] border border-line bg-paper px-5 py-[18px]">
+              <dt className="text-[11px] font-bold uppercase tracking-[0.14em] text-mute">{COPY.casinos.rating}</dt>
+              <dd className="mt-1.5 flex items-center gap-2 text-lg font-bold text-ink"><Stars rating={casino.rating} /> {casino.rating} out of 5</dd>
+            </div>
+            {liveOffers > 0 && (
+              <div className="rounded-[18px] border border-line bg-paper px-5 py-[18px]">
+                <dt className="text-[11px] font-bold uppercase tracking-[0.14em] text-mute">Offers listed</dt>
+                <dd className="mt-1.5 text-lg font-bold text-ink">{liveOffers} {liveOffers === 1 ? 'offer' : 'offers'} on this page</dd>
+              </div>
+            )}
+            {categoryNames.length > 0 && (
+              <div className="rounded-[18px] border border-line bg-paper px-5 py-[18px]">
+                <dt className="text-[11px] font-bold uppercase tracking-[0.14em] text-mute">Listed under</dt>
+                <dd className="mt-1.5 text-lg font-bold text-ink">{categoryNames.join(', ')}</dd>
+              </div>
+            )}
+          </dl>
+        </section>
+
+        <div className="mt-10 flex flex-wrap items-start gap-8">
+          <div className="min-w-0 flex-[2_1_520px]">
+            {casino.description && (
+              <>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-dark">Our review</p>
+                <h2 className="mb-4 mt-1.5 font-display text-[30px] font-semibold text-ink">What table players get at {casino.name}</h2>
+                <div className="prose max-w-[68ch] prose-p:text-[17px] prose-p:leading-[1.75] prose-p:text-ink-2" dangerouslySetInnerHTML={{ __html: casino.description }} />
+              </>
+            )}
+
+            {casino.categories && casino.categories.length > 0 && (
+              <>
+                <h3 className="mt-5 font-display text-xl font-semibold text-ink">Listed under</h3>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {casino.categories.map((c) => (
+                    <Link key={c.id} href={`/categories/${c.slug}`} className="inline-flex min-h-11 items-center rounded-full border border-line-soft bg-paper px-3.5 text-sm font-semibold text-ink transition-colors hover:border-ink">{c.name}</Link>
+                  ))}
+                </div>
+              </>
+            )}
+
+            <CasinoSpecialOffers offers={casino.special_offers ?? []} />
+
+            {/* Renders nothing until this site's "Visitor reviews" switch is on
+                in the admin — the component gates itself on the endpoint's 404. */}
+            <CasinoReviews casinoSlug={casino.slug} casinoName={casino.name} />
+          </div>
+
+          <aside className="min-w-0 flex-[1_1_300px] rounded-[22px] border border-line bg-paper p-[22px] lg:sticky lg:top-24">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-dark">Quick summary</p>
+            <h2 className="mt-1.5 font-display text-[22px] font-semibold text-ink">{casino.name} at a glance</h2>
+            <dl className="mt-2.5">
+              <div className="flex justify-between gap-3 border-b border-[#efece4] py-3 text-[15px]"><dt className="text-mute">Rating</dt><dd className="font-bold">{casino.rating.toFixed(1)} / 5</dd></div>
+              {casino.bonuses && <div className="flex justify-between gap-3 border-b border-[#efece4] py-3 text-[15px]"><dt className="text-mute">Welcome offer</dt><dd className="text-right font-bold text-win">{casino.bonuses}</dd></div>}
+              {liveOffers > 0 && <div className="flex justify-between gap-3 border-b border-[#efece4] py-3 text-[15px]"><dt className="text-mute">Offers listed</dt><dd className="font-bold">{liveOffers}</dd></div>}
+            </dl>
+            <a href={casino.attachment.affiliate_url} target="_blank" rel="nofollow sponsored noopener" className="mt-[18px] inline-flex min-h-12 w-full items-center justify-center rounded-full bg-brand px-6 font-bold text-white transition-colors hover:bg-brand-dark">
+              {COPY.casinos.visitCasino}
+            </a>
+            <p className="mt-3.5 flex gap-2.5 text-[13px] leading-normal text-mute"><span className="font-bold">18+</span>T&amp;Cs apply. Check bonus contribution for roulette before you claim.</p>
+          </aside>
         </div>
+
+        {moreCasinos.length > 0 && (
+          <section className="mt-14" aria-labelledby="more-casinos">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <h2 id="more-casinos" className="font-display text-[30px] font-semibold text-ink">More casinos for table players</h2>
+              <Link href="/casinos" className="inline-flex min-h-11 items-center font-bold text-brand-dark hover:text-brand">See all →</Link>
+            </div>
+            <ul className="mt-5 flex flex-col gap-3.5">
+              {moreCasinos.map((c) => <CasinoCard key={c.id} casino={c} />)}
+            </ul>
+          </section>
+        )}
       </main>
     </>
   )

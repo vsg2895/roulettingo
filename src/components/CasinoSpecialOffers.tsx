@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { resolveImageUrl } from '@/lib/images'
-import OfferBanner from '@/components/OfferBanner'
 import { COPY } from '@/constants/copy'
 import type { SpecialOffer } from '@shared/types/specialOffer'
 
@@ -28,10 +26,10 @@ export default function CasinoSpecialOffers({ offers }: { offers: SpecialOffer[]
   const visible = list.slice(start, start + PER_PAGE)
 
   return (
-    <section className="mt-10">
+    <section className="mt-11">
       <div className="mb-4 flex items-center justify-between gap-4">
-        <h2 className="min-w-0 font-display text-2xl font-semibold text-ink">
-          {COPY.casinos.offersHeading} <span className="font-sans text-lg font-semibold text-faint">({total})</span>
+        <h2 className="min-w-0 font-display text-[30px] font-semibold text-ink">
+          {COPY.casinos.offersHeading} ({total})
         </h2>
         {pageCount > 1 && (
           <div className="flex shrink-0 items-center gap-2">
@@ -63,41 +61,22 @@ export default function CasinoSpecialOffers({ offers }: { offers: SpecialOffer[]
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {visible.map((offer) => {
-          const thumb = resolveImageUrl(offer.image_path ?? offer.banner_image)
-          return (
-            <Link
-              key={offer.id}
-              href={`/special-offers/${offer.slug}`}
-              className="group flex gap-4 rounded-xl border border-line bg-paper p-4 transition-colors hover:border-brand hover:bg-brand/5"
-            >
-              {/* The same frame the bonus cards use — see OfferBanner. Rendered
-                  unconditionally: the backdrop IS the frame, so an offer still waiting
-                  for its artwork keeps its place in the row. */}
-              <span className="relative block h-16 w-28 shrink-0 overflow-hidden rounded-lg">
-                <OfferBanner src={thumb} alt={offer.title} sizes="112px" />
-              </span>
-              <span className="min-w-0">
-                {/* The bonus TYPE, as the editor named it.
-                    An eyebrow rather than a line under the title: the title is
-                    truncated to one line and the description clamped to two, so
-                    anything added below them competes for space that is already
-                    spoken for. Rendered only when the offer is filed under a
-                    type — an unfiled one shows nothing rather than an empty
-                    chip. */}
-                {offer.bonus_category_name && (
-                  <span className="mb-1 inline-block rounded-full border border-line text-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
-                    {offer.bonus_category_name}
-                  </span>
-                )}
-                <span className="block truncate font-semibold text-ink group-hover:text-brand">{offer.title}</span>
-                {offer.bonuses && <span className="mt-1 block line-clamp-2 text-sm text-muted">{offer.bonuses}</span>}
-                <span className="mt-2 inline-block text-xs font-bold text-brand">View offer →</span>
-              </span>
-            </Link>
-          )
-        })}
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(260px,100%),1fr))] gap-3.5">
+        {visible.map((offer) => (
+          <Link
+            key={offer.id}
+            href={`/special-offers/${offer.slug}`}
+            className="flex flex-col gap-1.5 rounded-[18px] border border-line bg-paper p-5 text-ink transition-colors hover:border-ink"
+          >
+            {/* The bonus TYPE, as the editor named it; an unfiled offer shows none. */}
+            {offer.bonus_category_name && (
+              <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-dark">{offer.bonus_category_name}</span>
+            )}
+            <span className="font-display text-[22px] font-semibold">{offer.title}</span>
+            {offer.bonuses && <span className="line-clamp-2 text-sm text-ink-2">{offer.bonuses}</span>}
+            <span className="mt-2 text-sm font-bold text-brand-dark">View offer →</span>
+          </Link>
+        ))}
       </div>
     </section>
   )

@@ -44,6 +44,7 @@ export const COPY = {
     // First row inside the header and footer dropdowns: the parent's own page.
     allCasinos: 'All Casinos',
     allOffers: 'All Offers',
+    topTables: 'Top Tables',
   },
   home: {
     bonus: 'Bonuses',

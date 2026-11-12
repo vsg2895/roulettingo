@@ -4,9 +4,9 @@ import { resolveImageUrl } from '@/lib/images'
 import { COPY } from '@/constants/copy'
 import type { CasinoWithAttachment } from '@shared/types/casino'
 
-function Stars({ rating }: { rating: number }) {
+export function Stars({ rating, className = '' }: { rating: number; className?: string }) {
   return (
-    <span className="inline-flex items-center gap-0.5" role="img" aria-label={`${rating} out of 5`}>
+    <span className={`inline-flex items-center tracking-[2px] ${className}`} role="img" aria-label={`${rating} out of 5`}>
       {Array.from({ length: 5 }, (_, i) => (
         <span key={i} className={i < rating ? 'text-gold' : 'text-line-soft'} aria-hidden>★</span>
       ))}
@@ -14,71 +14,70 @@ function Stars({ rating }: { rating: number }) {
   )
 }
 
-// Roulettingo — editorial review row: a serif rank numeral, a prominent brand
-// logo, then only the three things that matter (name · rating · bonus) and a
-// clear crimson primary CTA. No rank chip, no category clutter.
+export function GiftIcon() {
+  return (
+    <svg aria-hidden width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+      <rect x="3" y="8" width="18" height="13" rx="2" />
+      <path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s6 1 6 1zm0 0c2-4 6-4 6-1s-6 1-6 1z" />
+    </svg>
+  )
+}
+
+// Roulettingo — a ranking row: the logo tile, name · rating · bonus (rank 1
+// carries TOP PICK), and the two actions: Open Casino (affiliate) and Read The
+// Review. The list order is the ranking; no number is printed.
 export default function CasinoCard({ casino, rank }: { casino: CasinoWithAttachment; rank?: number }) {
-  // Card shows the casino's "Image" (logo), NOT the wide "Banner Image" (that's
-  // used big on the single casino page). Falls back to the banner if no Image.
+  // The casino's "Image" (logo), not the wide banner; the banner if no logo.
   const image = resolveImageUrl(casino.image_path ?? casino.banner_image)
 
   return (
-    <li className="group flex flex-col gap-4 rounded-2xl bg-paper p-5 shadow-[0_10px_30px_rgba(28,36,48,0.07)] transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(28,36,48,0.12)] sm:h-36 sm:flex-row sm:items-center sm:gap-7">
-      {/* Rank numeral + prominent logo */}
-      <div className="flex items-center gap-4 sm:gap-5">
-        {rank != null && (
-          <span
-            className="w-6 shrink-0 text-center font-display text-3xl font-semibold leading-none tabular-nums text-brand sm:w-8"
-            aria-label={`Rank ${rank}`}
-          >
-            {rank}
-          </span>
-        )}
-        <div className="flex-shrink-0">
-          {image ? (
-            // Directly-sized image (NO `fill`) → renders at exactly 160×96.
-            <Image
-              src={image}
-              alt={casino.name}
-              width={320}
-              height={192}
-              sizes="160px"
-              className="h-24 w-40 rounded-xl border border-line bg-white ring-1 ring-line"
-              style={{ objectFit: 'contain' }}
-            />
-          ) : (
-            <span className="grid h-24 w-40 place-items-center rounded-xl border border-line bg-cream text-2xl font-bold text-brand" aria-label={casino.name}>
-              {casino.name.charAt(0).toUpperCase()}
-            </span>
-          )}
-        </div>
-      </div>
+    <li className="flex flex-wrap items-center gap-3.5 rounded-[20px] border border-line bg-paper px-5 py-[18px] sm:gap-5">
+      {image ? (
+        <Image
+          src={image}
+          alt={casino.name}
+          width={264}
+          height={168}
+          sizes="132px"
+          className="h-16 w-24 shrink-0 rounded-[14px] border border-[#ece8df] bg-white object-contain p-1.5 sm:h-[84px] sm:w-[132px]"
+        />
+      ) : (
+        <span className="grid h-16 w-24 shrink-0 place-items-center rounded-[14px] border border-[#ece8df] bg-white p-2 text-center font-display text-base font-semibold text-ink sm:h-[84px] sm:w-[132px] sm:text-lg">
+          {casino.name}
+        </span>
+      )}
 
-      {/* The three things that matter */}
-      <div className="min-w-0 flex-1">
-        <h3 className="font-display text-xl font-semibold leading-tight text-ink sm:text-2xl">{casino.name}</h3>
-        <div className="mt-1.5 flex items-center gap-2">
+      <div className="min-w-0 flex-[1_1_240px]">
+        <h3 className="font-display text-2xl font-semibold leading-tight text-ink">
+          {casino.name}
+          {rank === 1 && (
+            <span className="ml-2 inline-block rounded-full bg-gold-tint px-2.5 py-1 align-middle font-sans text-[11px] font-bold tracking-[0.1em] text-gold-ink">TOP PICK</span>
+          )}
+        </h3>
+        <div className="mt-1 flex items-center gap-2 text-sm font-semibold text-ink-2">
           <Stars rating={casino.rating} />
-          <span className="text-sm font-semibold text-muted">{casino.rating.toFixed(1)}</span>
+          {casino.rating.toFixed(1)}
         </div>
         {casino.bonuses && (
-          <p className="mt-2 line-clamp-2 text-[15px] font-bold text-win">{casino.bonuses}</p>
+          <p className="mt-2.5 inline-flex items-center gap-2 rounded-[10px] bg-win-bg px-3 py-1.5 text-sm font-bold text-win">
+            <GiftIcon />
+            <span className="line-clamp-2">{casino.bonuses}</span>
+          </p>
         )}
       </div>
 
-      {/* CTAs — Visit is primary, Read Review secondary */}
-      <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-shrink-0">
+      <div className="flex w-full flex-wrap gap-2 sm:w-[190px] sm:flex-col sm:flex-nowrap">
         <a
           href={casino.attachment.affiliate_url}
           target="_blank"
           rel="nofollow sponsored noopener"
-          className="rounded-xl bg-gradient-to-b from-brand-soft to-brand-dark px-8 py-3 text-center text-sm font-bold text-white shadow-md shadow-brand/25 transition-transform hover:-translate-y-0.5 sm:min-w-[150px]"
+          className="inline-flex min-h-[46px] flex-1 basis-[130px] items-center justify-center whitespace-nowrap rounded-xl bg-brand px-3 text-sm sm:basis-auto sm:px-4 sm:text-[15px] font-bold text-white transition-colors hover:bg-brand-dark"
         >
           {COPY.casinos.visitCasino}
         </a>
         <Link
           href={`/casinos/${casino.slug}`}
-          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line-soft bg-paper px-8 py-2.5 text-center text-sm font-bold text-ink transition-colors hover:border-brand hover:text-brand"
+          className="inline-flex min-h-[46px] flex-1 basis-[130px] items-center justify-center whitespace-nowrap rounded-xl border border-line-soft bg-paper px-3 text-sm font-bold sm:basis-auto sm:px-4 sm:text-[15px] text-ink transition-colors hover:border-ink"
         >
           {COPY.casinos.readReview}
         </Link>

@@ -32,7 +32,7 @@ export default function Pagination({ basePath, current, last }: { basePath: stri
           key={p}
           href={link(p)}
           aria-current={p === current ? 'page' : undefined}
-          className={`${base} ${p === current ? 'bg-gradient-to-b from-brand-soft to-brand-dark text-white shadow-md shadow-brand/25' : idle}`}
+          className={`${base} ${p === current ? 'bg-ink text-white' : idle}`}
         >
           {p}
         </Link>

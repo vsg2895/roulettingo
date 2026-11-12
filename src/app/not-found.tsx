@@ -34,10 +34,10 @@ export default function NotFound() {
         <p className="text-sm font-semibold uppercase tracking-[0.2em]" style={{ color: '#b3382f' }}>
           404
         </p>
-        <h1 className="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">
+        <h1 className="mt-4 font-display text-[34px] font-semibold text-ink sm:text-[44px]">
           We couldn&rsquo;t find that page
         </h1>
-        <p className="mt-4 text-slate-500">
+        <p className="mt-4 text-ink-2">
           The page may have moved or no longer exists. Try one of these instead:
         </p>
         <nav aria-label="Helpful links" className="mt-8">
@@ -46,7 +46,7 @@ export default function NotFound() {
               <li key={href}>
                 <Link
                   href={href}
-                  className="inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white/70 px-5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-400"
+                  className="inline-flex min-h-11 items-center rounded-full border border-line-soft bg-paper px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-ink"
                 >
                   {label}
                 </Link>

@@ -76,8 +76,8 @@ export default async function CasinosPage({ searchParams }: Props) {
   if (!selected) {
     return (
       <main className="px-4 py-6 sm:py-16">
-        <div className="container mx-auto max-w-5xl">
-          <h1 className="font-display text-2xl sm:text-4xl font-semibold text-ink">{COPY.casinos.pageTitle}</h1>
+        <div className="mx-auto max-w-[1200px]">
+          <h1 className="font-display text-[30px] font-semibold text-ink sm:text-[44px]">{COPY.casinos.pageTitle}</h1>
           <p className="mt-4 text-muted">{COPY.casinos.noResults}</p>
         </div>
       </main>
@@ -124,9 +124,9 @@ export default async function CasinosPage({ searchParams }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
       <main className="px-4 py-6 sm:py-16">
-        <div className="container mx-auto max-w-5xl">
+        <div className="mx-auto max-w-[1200px]">
           <header className="mb-4 sm:mb-8">
-            <h1 className="font-display text-2xl sm:text-4xl font-semibold text-ink">{COPY.casinos.pageTitle}</h1>
+            <h1 className="font-display text-[30px] font-semibold text-ink sm:text-[44px]">{COPY.casinos.pageTitle}</h1>
             <p className="mt-1 text-sm text-muted sm:mt-2 sm:text-base">{COPY.casinos.pageDescription}</p>
           </header>
 
@@ -141,7 +141,7 @@ export default async function CasinosPage({ searchParams }: Props) {
           {casinos.length === 0 ? (
             <p className="text-muted">{COPY.casinos.noResults}</p>
           ) : (
-            <ol className="flex flex-col gap-4">
+            <ol className="flex flex-col gap-3.5">
               {casinos.map((casino, i) => (
                 <CasinoCard key={casino.id} casino={casino} rank={(meta.current_page - 1) * meta.per_page + i + 1} />
               ))}

@@ -4,14 +4,13 @@ import Link from 'next/link'
  * Roulettingo brand logo: a roulette-wheel emblem (conic segments of crimson +
  * navy around a gold-pip hub) next to the "Roulettingo" wordmark and the
  * "SPIN SMARTER" tagline. Inlined markup so it renders instantly, scales
- * crisply, and needs no extra request. The Link carries the accessible name;
- * the artwork is aria-hidden to avoid a duplicate announcement.
+ * crisply, and needs no extra request. The visible wordmark is the link's
+ * accessible name; the artwork is aria-hidden to avoid a duplicate announcement.
  */
 export default function Logo({ className = '' }: { className?: string }) {
   return (
     <Link
       href="/"
-      aria-label="Roulettingo home"
       className={`inline-flex min-h-11 shrink-0 items-center gap-3 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 ${className}`.trim()}
     >
       {/* Roulette-wheel emblem */}
@@ -30,10 +29,10 @@ export default function Logo({ className = '' }: { className?: string }) {
 
       {/* Wordmark */}
       <span className="flex flex-col leading-none">
-        <span className="font-sans text-[22px] font-bold tracking-tight text-ink">
+        <span className="font-display text-[22px] font-semibold leading-[1.05] text-ink">
           Roulett<span className="text-brand">ingo</span>
         </span>
-        <span className="mt-[3px] text-xs font-medium tracking-[0.18em] text-faint">SPIN SMARTER</span>
+        <span className="mt-[3px] text-[11px] font-bold tracking-[0.22em] text-mute">SPIN SMARTER</span>
       </span>
     </Link>
   )
