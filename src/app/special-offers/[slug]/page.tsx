@@ -215,7 +215,7 @@ export default async function SpecialOfferDetailPage({ params }: Props) {
             Next 16 `priority` emits the preload at the browser's default Low
             priority, and this image is the mobile LCP. */}
         {banner && (
-          <div className="relative mt-4 aspect-[16/6] overflow-hidden rounded-2xl bg-sand">
+          <div className="relative mt-4 aspect-[16/6] overflow-hidden rounded-2xl">
             <Image src={banner} alt={offer.title} fill className="object-contain object-center" sizes={BANNER_SIZES} preload fetchPriority="high" />
           </div>
         )}
@@ -233,7 +233,7 @@ export default async function SpecialOfferDetailPage({ params }: Props) {
               <Stars rating={offer.rating} />
               {offer.rating.toFixed(1)}
               {offer.casino && (
-                <> · Offer by <Link href={`/casinos/${offer.casino.slug}`} className="font-bold text-brand-dark hover:text-brand">{offer.casino.name}</Link></>
+                <> · Offer by <Link href={`/casinos/${offer.casino.slug}`} className="-my-1 py-1 font-bold text-brand-dark hover:text-brand">{offer.casino.name}</Link></>
               )}
             </div>
 

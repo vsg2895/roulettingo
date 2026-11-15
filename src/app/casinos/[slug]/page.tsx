@@ -205,7 +205,7 @@ export default async function CasinoDetailPage({ params }: Props) {
             <span className="grid h-[72px] w-24 shrink-0 place-items-center rounded-[14px] border border-[#ece8df] bg-white p-2 text-center font-display font-semibold">{casino.name}</span>
           )}
           <div className="min-w-0 flex-[1_1_220px]">
-            <h1 className="font-display text-[28px] font-semibold text-ink sm:text-[38px]">{casino.name}</h1>
+            <h1 className="font-display text-[28px] font-semibold text-ink [overflow-wrap:anywhere] sm:text-[38px]">{casino.name}</h1>
             <div className="mt-1 flex items-center gap-2 text-sm font-semibold text-ink-2">
               <Stars rating={casino.rating} />
               {casino.rating.toFixed(1)} · {COPY.casinos.rating}
