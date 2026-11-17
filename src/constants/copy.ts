@@ -144,7 +144,7 @@ export const COPY = {
   newsletter: {
     title: 'New Tables, New Offers',
     subtitle: 'A short email when we add a roulette casino or spot an offer that counts on table games.',
-    placeholder: 'Email address',
+    placeholder: 'Email for new table reviews',
     button: 'Join',
     // Shown while the address is being checked. The subscribe request now
     // waits on a live address-validation call, so the button has to say so
@@ -200,6 +200,9 @@ export const COPY = {
     ratingLabel: 'Rating',
     titleLabel: 'Headline (optional)',
     bodyLabel: 'Your review',
+    namePlaceholder: 'First name or nickname',
+    emailPlaceholder: 'you@example.com',
+    titlePlaceholder: 'One line on how the tables played',
     bodyPlaceholder: 'What was your experience \u2014 payouts, support, verification?',
     submit: 'Submit Review',
     // Two outcomes, because the site can run pre- or post-moderation

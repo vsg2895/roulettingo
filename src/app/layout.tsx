@@ -156,7 +156,7 @@ const NAV_MOBILE = {
 }
 
 /** Link style for every footer column on the dark ground. */
-const FOOTER_LINK = 'inline-block -mx-1 px-1 py-1.5 -my-1.5 text-sm text-night-text transition-colors hover:text-white'
+const FOOTER_LINK = 'inline-flex min-h-11 min-w-11 items-center text-sm text-night-text transition-colors hover:text-white'
 
 // The 11 legal pages split into the footer's three columns. Every page in
 // LEGAL_PAGES lands in exactly one of them.
@@ -309,7 +309,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <div className="grid flex-[2_1_480px] grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-6">
                 <div>
                   <p className="text-xs font-bold tracking-[0.14em] text-white">EXPLORE</p>
-                  <ul className="mt-2.5 flex flex-col gap-2.5">
+                  <ul className="mt-2.5 flex flex-col">
                     {navLinks.map(({ href, label }) =>
                       href === '/casinos' && categoryMenuItems.length > 0 ? (
                         <FooterNavGroup key={href} label={label} href={href} allLabel={COPY.nav.allCasinos} itemBasePath="/categories" items={categoryMenuItems} linkClassName={FOOTER_LINK} guideClassName="border-night-line" />
@@ -328,7 +328,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 </div>
                 <nav aria-label="Legal">
                   <p className="text-xs font-bold tracking-[0.14em] text-white">LEGAL</p>
-                  <ul className="mt-2.5 flex flex-col gap-2.5">
+                  <ul className="mt-2.5 flex flex-col">
                     {footerPages(FOOTER_LEGAL).map(({ slug, label }) => (
                       <li key={slug}><Link href={`/${slug}`} className={FOOTER_LINK}>{label}</Link></li>
                     ))}
@@ -339,7 +339,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 </nav>
                 <nav aria-label="Policies">
                   <p className="text-xs font-bold tracking-[0.14em] text-white">POLICIES</p>
-                  <ul className="mt-2.5 flex flex-col gap-2.5">
+                  <ul className="mt-2.5 flex flex-col">
                     {footerPages(FOOTER_POLICIES).map(({ slug, label }) => (
                       <li key={slug}><Link href={`/${slug}`} className={FOOTER_LINK}>{label}</Link></li>
                     ))}
